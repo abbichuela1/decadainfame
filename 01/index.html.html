@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Nueva Década Infame</title>
+    <style>
+        :root {
+            --bg-main: #230c14;
+            --text-pink: #d8849b;
+            --text-light: #f4d0c5;
+            --card-bg: #a89db1;
+            --text-dark: #1c1143;
+            --btn-cart: #725264;
+            --cart-bg: #ccbaf3;
+            --cart-dark: #2f2a4b;
+            --btn-buy: #d3c4f5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVEGACIÓN --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background-color: #1a080e;
+        }
+
+        .logo {
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+            color: var(--text-light);
+            font-size: 2.8rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 0px #b37371, 4px 4px 0px #000;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .shipping-txt { font-style: italic; font-size: 1.1rem; }
+
+        .btn-header-cart {
+            background-color: var(--btn-cart);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        
+        .btn-header-cart:hover { background-color: #8c657a; }
+
+        /* --- HERO (VIDEO 01) --- */
+        .hero {
+            display: flex;
+            height: 55vh;
+            border-bottom: 2px solid #1a080e;
+        }
+
+        .hero-text {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 40px 60px;
+        }
+
+        .hero-text h1 {
+            color: var(--text-pink);
+            font-style: italic;
+            font-size: 2.4rem;
+            text-align: right;
+            line-height: 1.4;
+        }
+
+        .hero-video {
+            flex: 1;
+            position: relative;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .audio-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: 1px solid white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            z-index: 10;
+        }
+
+        /* --- PRODUCTOS --- */
+        .section-title {
+            text-align: center;
+            color: var(--text-light);
+            font-style: italic;
+            font-size: 2.5rem;
+            margin: 40px 0;
+            font-weight: normal;
+        }
+
+        .row-1 {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .row-2 {
+            display: flex;
+            gap: 30px;
+            padding: 0 40px 60px 40px;
+        }
+
+        .row-2-video {
+            flex: 0 0 35%;
+            position: relative;
+            min-height: 400px;
+        }
+
+        .row-2-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 25px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            color: var(--text-dark);
+            width: 320px;
+        }
+
+        .row-2-grid .card { width: 100%; }
+
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 900;
+            font-style: italic;
+            text-decoration: underline;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .card-desc {
+            font-size: 0.8rem;
+            font-style: italic;
+            text-align: center;
+            margin-bottom: 35px;
+            line-height: 1.2;
+        }
+
+        .btn-comprar {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background-color: var(--btn-buy);
+            color: var(--text-dark);
+            border: none;
+            padding: 8px 18px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            transition: transform 0.1s;
+        }
+
+        .btn-comprar:active { transform: scale(0.95); }
+
+        /* --- CARRITO DESLIZABLE --- */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -450px; /* Escondido a la derecha */
+            width: 400px;
+            height: 100vh;
+            background-color: transparent;
+            transition: right 0.4s ease-in-out;
+            z-index: 1000;
+            filter: drop-shadow(-5px 0px 10px rgba(0,0,0,0.5));
+        }
+
+        .cart-sidebar.open { right: 0; } /* Clase que lo hace aparecer */
+
+        .cart-shape {
+            background-color: var(--cart-bg);
+            width: 100%;
+            height: 100%;
+            /* Borde inferior en diagonal estilo cascada */
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 50% 100%, 0 90%);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .cart-header {
+            text-align: center;
+            padding: 30px 20px 20px 20px;
+            color: var(--text-dark);
+        }
+
+        .cart-header h2 {
+            font-style: italic;
+            font-weight: 900;
+            text-decoration: underline;
+            font-size: 1.8rem;
+        }
+
+        .cart-items {
+            flex: 1;
+            padding: 0 20px;
+            overflow-y: auto;
+            margin-bottom: 100px; /* Espacio para el footer diagonal */
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: stretch;
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            height: 90px;
+        }
+
+        .cart-controls {
+            background-color: var(--cart-dark);
+            width: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+
+        .cart-controls button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .cart-item-img {
+            width: 80px;
+            object-fit: cover;
+            margin: 5px;
+            border-radius: 15px;
+        }
+
+        .cart-item-info {
+            padding: 10px 5px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .cart-item-title {
+            font-size: 0.8rem;
+            font-weight: 900;
+            font-style: italic;
+            text-decoration: underline;
+            color: var(--text-dark);
+            line-height: 1.1;
+        }
+
+        .cart-item-desc {
+            font-size: 0.65rem;
+            font-style: italic;
+            color: var(--text-dark);
+            margin-top: 4px;
+        }
+
+        .cart-footer {
+            background-color: var(--cart-dark);
+            text-align: center;
+            padding: 20px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 120px;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        .cart-footer button {
+            background: none;
+            border: none;
+            color: white;
+            font-style: italic;
+            font-weight: bold;
+            text-decoration: underline;
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10;
+            color: var(--text-dark);
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">La Nueva Década Infame</div>
+        <div class="nav-right">
+            <span class="shipping-txt">Envíos a todo el país sin recargo</span>
+            <button class="btn-header-cart" onclick="toggleCart()">Carrito (<span id="cart-count">0</span>)</button>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-text">
+            <h1>Comprá y vendé<br>artículos vintage<br>para su uso o<br>colección,<br>mostrando la historia<br>detras de ellos.</h1>
+        </div>
+        <div class="hero-video">
+            <video id="vid1" src="01.mp4" autoplay loop muted playsinline></video>
+            <button class="audio-btn" onclick="toggleAudio('vid1')">Activar Audio</button>
+        </div>
+    </header>
+
+    <h2 class="section-title">Últimos ingresos</h2>
+
+    <section class="row-1">
+        <div class="card">
+            <img src="WhatsApp Image 2026-06-22 at 20.26.49.jpeg" alt="Proyector">
+            <div class="card-title">Proyector de cine profesional<br>Cinemeccanica Victoria 5</div>
+            <div class="card-desc">Utilizado en el rodaje de la emblemática "Cinema<br>paraiso" de Giuseppe Tornatore.</div>
+            <button class="btn-comprar" onclick="agregarAlCarrito(1)">Comprar</button>
+        </div>
+        
+        <div class="card">
+            <img src="WhatsApp Image 2026-06-22 at 20.26.49 (1).jpeg" alt="Walkman">
+            <div class="card-title">Sony Walkman D-E350</div>
+            <div class="card-desc">compatible con discos CD-R y CD-RW.</div>
+            <button class="btn-comprar" onclick="agregarAlCarrito(2)">Comprar</button>
+        </div>
+    </section>
+
+    <section class="row-2">
+        <div class="row-2-video">
+            <video id="vid2" src="02.mp4" autoplay loop muted playsinline></video>
+            <button class="audio-btn" onclick="toggleAudio('vid2')">Activar Audio</button>
+        </div>
+        
+        <div class="row-2-grid">
+            <div class="card">
+                <img src="WhatsApp Image 2026-06-22 at 20.26.48.jpeg" alt="Pucará">
+                <div class="card-title">FMA IA-58 Pucará a escala</div>
+                <div class="card-desc">Argentina desplegó decenas de estas aeronaves a las<br>islas Malvinas en 1982, operando desde pistas de tierra<br>en condiciones sumamente adversas.</div>
+                <button class="btn-comprar" onclick="agregarAlCarrito(3)">Comprar</button>
+            </div>
+            
+            <div class="card">
+                <img src="WhatsApp Image 2026-06-22 at 20.26.48 (2).jpeg" alt="Maserati">
+                <div class="card-title">Maserati 250F de 1957</div>
+                <div class="card-desc">Ganador del GP de Francia de 1957 conducido<br>por Juan Manuel Fangio.</div>
+                <button class="btn-comprar" onclick="agregarAlCarrito(4)">Comprar</button>
+            </div>
+            
+            <div class="card">
+                <img src="WhatsApp Image 2026-06-22 at 20.26.48 (1).jpeg" alt="Packard">
+                <div class="card-title">Packard Super Eight One-Eighty</div>
+                <div class="card-desc">Utilizado por Eva Perón durante sus apariciones luego<br>de la firma del voto femenino. Posteriormente utilizado<br>en "El Padrino" de Francis Ford Coppola.</div>
+                <button class="btn-comprar" onclick="agregarAlCarrito(5)">Comprar</button>
+            </div>
+            
+            <div class="card">
+                <img src="WhatsApp Image 2026-06-22 at 20.26.47.jpeg" alt="Canberra">
+                <div class="card-title">BAC Canberra Mk.62</div>
+                <div class="card-desc">Tuvo un rol fundamental realizando el primer<br>bombardeo nocturno sobre tropas inglesas en San<br>Carlos.</div>
+                <button class="btn-comprar" onclick="agregarAlCarrito(6)">Comprar</button>
+            </div>
+        </div>
+    </section>
+
+    <aside class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-shape">
+            <button class="close-btn" onclick="toggleCart()">✖</button>
+            <div class="cart-header">
+                <h2>carrito (<span id="cart-header-count">0</span>)</h2>
+            </div>
+            
+            <div class="cart-items" id="cart-items-container">
+                </div>
+            
+            <div class="cart-footer">
+                <button onclick="procesarPago()">comprar</button>
+            </div>
+        </div>
+    </aside>
+
+    <script>
+        // Array con los nombres EXACTOS de tus imágenes para inyectar en el carrito
+        const productos = [
+            { id: 1, img: 'WhatsApp Image 2026-06-22 at 20.26.49.jpeg', title: 'Proyector de cine profesional Cinemeccanica Victoria 5', desc: 'Utilizado en el rodaje de "Cinema paraiso"' },
+            { id: 2, img: 'WhatsApp Image 2026-06-22 at 20.26.49 (1).jpeg', title: 'Sony Walkman D-E350', desc: 'Compatible con CD-R y CD-RW.' },
+            { id: 3, img: 'WhatsApp Image 2026-06-22 at 20.26.48.jpeg', title: 'FMA IA-58 Pucará a escala', desc: 'Desplegado a Malvinas en 1982' },
+            { id: 4, img: 'WhatsApp Image 2026-06-22 at 20.26.48 (2).jpeg', title: 'Maserati 250F de 1957', desc: 'Ganador GP Francia 1957 - Fangio' },
+            { id: 5, img: 'WhatsApp Image 2026-06-22 at 20.26.48 (1).jpeg', title: 'Packard Super Eight One-Eighty', desc: 'Usado por Eva Perón y en "El Padrino"' },
+            { id: 6, img: 'WhatsApp Image 2026-06-22 at 20.26.47.jpeg', title: 'BAC Canberra Mk.62', desc: 'Bombardeo nocturno en San Carlos' }
+        ];
+
+        let carrito = [];
+
+        // Activar/Desactivar Audio de Videos
+        function toggleAudio(videoId) {
+            const vid = document.getElementById(videoId);
+            const btn = vid.nextElementSibling;
+            vid.muted = !vid.muted;
+            btn.innerText = vid.muted ? "Activar Audio" : "Desactivar Audio";
+        }
+
+        // Abrir/Cerrar Carrito con deslizamiento lateral
+        function toggleCart() {
+            document.getElementById('cart-sidebar').classList.toggle('open');
+        }
+
+        // Lógica de Comprar en los Artículos
+        function agregarAlCarrito(id) {
+            const producto = productos.find(p => p.id === id);
+            const enCarrito = carrito.find(item => item.id === id);
+            
+            if (enCarrito) {
+                enCarrito.cantidad++;
+            } else {
+                carrito.push({ ...producto, cantidad: 1 });
+            }
+            
+            actualizarCarritoUI();
+            
+            // Abre el carrito automáticamente si está cerrado para que veas el autito entrando
+            const sidebar = document.getElementById('cart-sidebar');
+            if(!sidebar.classList.contains('open')) {
+                toggleCart();
+            }
+        }
+
+        // Controles de Sumar y Restar del Carrito
+        function modificarCantidad(id, delta) {
+            const item = carrito.find(i => i.id === id);
+            if (item) {
+                item.cantidad += delta;
+                if (item.cantidad <= 0) {
+                    carrito = carrito.filter(i => i.id !== id);
+                }
+            }
+            actualizarCarritoUI();
+        }
+
+        // Renderizado del HTML del Carrito
+        function actualizarCarritoUI() {
+            const container = document.getElementById('cart-items-container');
+            const countNav = document.getElementById('cart-count');
+            const countHeader = document.getElementById('cart-header-count');
+            
+            const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+            countNav.innerText = totalItems;
+            countHeader.innerText = totalItems;
+            
+            container.innerHTML = '';
+            
+            carrito.forEach(item => {
+                container.innerHTML += `
+                    <div class="cart-item">
+                        <div class="cart-controls">
+                            <button onclick="modificarCantidad(${item.id}, 1)">+</button>
+                            <button onclick="modificarCantidad(${item.id}, -1)">-</button>
+                        </div>
+                        <img src="${item.img}" alt="${item.title}" class="cart-item-img">
+                        <div class="cart-item-info">
+                            <div class="cart-item-title">${item.title}</div>
+                            <div class="cart-item-desc">Unidades: ${item.cantidad} - ${item.desc}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Botón Comprar Final
+        function procesarPago() {
+            if(carrito.length === 0) {
+                alert("El carrito está vacío. Agregá alguna reliquia primero.");
+            } else {
+                alert("¡Excelente elección! Redirigiendo a la pasarela de pago para tus artículos vintage.");
+                carrito = [];
+                actualizarCarritoUI();
+                toggleCart();
+            }
+        }
+    </script>
+</body>
+</html>
